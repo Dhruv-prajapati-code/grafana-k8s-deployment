@@ -1,0 +1,46 @@
+# kube-prometheus-stack Helm values
+# https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+
+prometheus:
+  prometheusSpec:
+    # Allow Prometheus to discover ServiceMonitors from ALL namespaces (not just monitoring)
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+
+    # Scrape interval
+    scrapeInterval: 15s
+    evaluationInterval: 15s
+
+grafana:
+  adminPassword: admin123
+
+  # Enable persistence (optional - remove if no PV available)
+  persistence:
+    enabled: false
+
+  # Nice default dashboards
+  defaultDashboardsEnabled: true
+
+alertmanager:
+  enabled: true
+
+# Reduce resource usage for local/dev clusters
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector: {}
+    resources:
+      requests:
+        memory: 400Mi
+        cpu: 200m
+      limits:
+        memory: 800Mi
+        cpu: 500m
+
+kubelet:
+  enabled: true
+
+nodeExporter:
+  enabled: true

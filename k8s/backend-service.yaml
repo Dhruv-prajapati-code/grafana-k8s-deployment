@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: devops
+  labels:
+    app: backend-app     # required: ServiceMonitor selector matches this
+spec:
+  selector:
+    app: backend-app
+  ports:
+    - name: http         # required: ServiceMonitor references this port by name
+      port: 5000
+      targetPort: 5000

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DevOps Task Manager</title>
+</head>
+
+<body>
+
+<h1>DevOps 3 Tier Application</h1>
+
+<input type="text" id="taskInput" placeholder="Enter task">
+<button onclick="addTask()">Add Task</button>
+
+<h2>Tasks</h2>
+<ul id="taskList"></ul>
+
+<script>
+
+const API = "http://backend:5000"
+
+async function loadTasks() {
+
+ const response = await fetch(API + "/tasks")
+ const tasks = await response.json()
+
+ const list = document.getElementById("taskList")
+ list.innerHTML = ""
+
+ tasks.forEach(t => {
+
+   const li = document.createElement("li")
+   li.innerText = t.task
+   list.appendChild(li)
+
+ })
+
+}
+
+async function addTask() {
+
+ const task = document.getElementById("taskInput").value
+
+ await fetch(API + "/tasks",{
+   method:"POST",
+   headers:{
+     "Content-Type":"application/json"
+   },
+   body: JSON.stringify({task:task})
+ })
+
+ loadTasks()
+
+}
+
+loadTasks()
+
+</script>
+
+</body>
+</html>

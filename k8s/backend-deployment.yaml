@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deploy
+  namespace: devops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend-app
+  template:
+    metadata:
+      labels:
+        app: backend-app
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "5000"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+       - name: backend-cont
+         image: dhruvprajapaticode/devops-backend:latest
+         ports:
+         - containerPort: 5000
+         env:
+          - name: DB_NAME
+            value: tasksdb
+          - name: DB_USER
+            value: postgres
+          - name: DB_PASSWORD
+            value: postgres
+          - name: DB_HOST
+            value: postgres

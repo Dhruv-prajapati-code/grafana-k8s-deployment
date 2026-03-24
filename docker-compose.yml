@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: tasksdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./db-init:/docker-entrypoint-initdb.d
+
+  backend:
+    build: ./backend
+    container_name: backend-api
+    depends_on:
+      - postgres
+    environment:
+      DB_HOST: postgres
+      DB_NAME: tasksdb
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+    ports:
+      - "5000:5000"
+
+  frontend:
+    image: nginx:latest
+    container_name: frontend-ui
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+    ports:
+      - "3000:80"
+
+volumes:
+  postgres_data:
